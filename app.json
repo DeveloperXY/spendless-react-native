@@ -19,7 +19,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.spendlessreactnative"
     },
     "web": {
       "output": "static",
@@ -36,6 +37,39 @@
           "backgroundColor": "#ffffff",
           "dark": {
             "backgroundColor": "#000000"
+          }
+        }
+      ],
+      [
+        "expo-font",
+        {
+          "android": {
+            "fonts": [
+              {
+                "fontFamily": "Figtree",
+                "fontDefinitions": [
+                  {
+                    "path": "./assets/fonts/Figtree-Regular.ttf",
+                    "weight": 400
+                  },
+                  {
+                    "path": "./assets/fonts/Figtree-Medium.ttf",
+                    "weight": 500
+                  },
+                  {
+                    "path": "./assets/fonts/Figtree-SemiBold.ttf",
+                    "weight": 600
+                  }
+                ]
+              }
+            ]
+          },
+          "ios": {
+            "fonts": [
+              "./assets/fonts/Figtree-Regular.ttf",
+              "./assets/fonts/Figtree-Medium.ttf",
+              "./assets/fonts/Figtree-SemiBold.ttf"
+            ]
           }
         }
       ]
