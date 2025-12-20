@@ -16,7 +16,7 @@ function Register({}) {
     return (
         <SafeAreaView style={{...styles.root, backgroundColor: theme.colors.background}}>
             <View style={styles.container}>
-                <Image source={require("../../../assets/images/spendless-icon.png")}/>
+                <Image style={styles.appIcon} source={require("../../../assets/images/spendless-icon.png")}/>
                 <Text style={{...styles.header, ...theme.typography.headlineMedium}}>
                     Welcome to SpendLess!{"\n"}How can we address you ?
                 </Text>
@@ -83,5 +83,8 @@ const styles = StyleSheet.create({
     },
     login: {
         marginTop: 48,
+    },
+    appIcon: {
+        marginTop: -16
     },
 });
