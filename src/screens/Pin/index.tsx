@@ -6,7 +6,7 @@ import PinCombination from "@/src/screens/Pin/components/PinCombination";
 import BackButton from "@/src/components/BackButton";
 import {Ionicons} from "@expo/vector-icons";
 import {LogoutButton} from "@/src/screens/Pin/components/LogoutButton";
-import pressable from "react-native-gesture-handler/src/components/Pressable";
+import ScreenHeader from "@/src/components/ScreenHeader";
 
 type HeaderProps = {
     title: string;
@@ -55,7 +55,7 @@ function PinScreen({showBackBtn = false, showLogOutBtn = false, error, title, su
                     {showLogOutBtn &&
                         <LogoutButton style={[styles.logoutBtn, {backgroundColor: `${theme.colors.error}12`}]}
                                       onClick={() => console.log("logout")}/>}
-                    <PinScreen.Header title={title} subTitle={subTitle}/>
+                    <ScreenHeader title={title} subTitle={subTitle} style={{marginTop: 24}}/>
                     <PinCombination pin={pin} containerStyle={{marginTop: 48}}/>
                     <PinScreen.Keyboard/>
                 </View>
@@ -65,15 +65,6 @@ function PinScreen({showBackBtn = false, showLogOutBtn = false, error, title, su
         </View>
     );
 }
-
-PinScreen.Header = function Header({title, subTitle, style}: HeaderProps) {
-    const {theme} = useTheme();
-    return <View style={[styles.headerContainer, style]}>
-        <Image style={styles.appIcon} source={require("../../../assets/images/spendless-icon.png")}/>
-        <Text style={{...styles.header, ...theme.typography.headlineMedium}}>{title}</Text>
-        <Text style={{...styles.subheader, ...theme.typography.bodyMedium}}>{subTitle}</Text>
-    </View>;
-};
 
 PinScreen.Keyboard = function Header({style, enabled = true, hideFingerprint = true}: KeyboardProps) {
     const rows = [
@@ -113,13 +104,13 @@ function KeyboardButton({style, type, value, enabled}: KeyboardBtnProps) {
             backgroundColor: pressed ? theme.colors.onPrimaryFixed : theme.colors.primaryFixed
         },
     ]}>
-        {({ pressed }) => (
+        {({pressed}) => (
             <>
                 {type === "text" && (
                     <Text
                         style={[
                             theme.typography.headlineLarge,
-                            { color: pressed ? theme.colors.primaryFixed : theme.colors.onPrimaryFixed },
+                            {color: pressed ? theme.colors.primaryFixed : theme.colors.onPrimaryFixed},
                         ]}
                     >
                         {value}
@@ -162,11 +153,6 @@ const styles = StyleSheet.create({
     errorFooterText: {
         textAlign: 'center',
     },
-    headerContainer: {
-        flexDirection: 'column',
-        alignItems: 'center',
-        marginTop: 48
-    },
     keyboardContainer: {
         marginTop: 48,
         gap: 4,
@@ -189,14 +175,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
     },
-    header: {
-        marginTop: 32,
-        textAlign: 'center',
-    },
-    subheader: {
-        marginTop: 12,
-        textAlign: 'center',
-    },
     backBtn: {
         alignSelf: 'flex-start',
         position: 'absolute',
@@ -206,8 +184,5 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         position: 'absolute',
         marginEnd: 16
-    },
-    appIcon: {
-        marginTop: -16
     },
 });
