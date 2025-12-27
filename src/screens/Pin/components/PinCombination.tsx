@@ -29,6 +29,7 @@ function PinCombination({pin = "", count = 5, dotSize = 18, containerStyle}: Pin
             {
                 pin.toString()
                     .padEnd(count, "-")
+                    .slice(0, count)
                     .split("")
                     .map(char => char !== "-")
                     .map(isFilled => dotStyle(isFilled))

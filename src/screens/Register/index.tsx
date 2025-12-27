@@ -1,17 +1,18 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Image, StyleSheet, Text, TextInput, View} from "react-native";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {useTheme} from "@/src/hooks/useTheme";
 import SpendlessButton from "@/src/components/SpendlessButton";
 import {Link} from "expo-router";
 
-function Register({}) {
+type RegisterScreenProps = {
+    username: string | null;
+    setUsername: (username: string) => void;
+    onNext: () => void;
+};
+
+function Register({username, setUsername, onNext}: RegisterScreenProps) {
     const {theme} = useTheme();
-    const [username, onChangeUsername] = useState("");
-
-    const onNext = () => {
-
-    };
 
     return (
         <SafeAreaView style={{...styles.root, backgroundColor: theme.colors.background}}>
@@ -24,8 +25,8 @@ function Register({}) {
                     Create a unique username
                 </Text>
                 <TextInput
-                    onChangeText={onChangeUsername}
-                    value={username}
+                    onChangeText={setUsername}
+                    value={username ?? ""}
                     placeholder="Username"
                     placeholderTextColor={`${theme.colors.onSurface}61`}
                     returnKeyType="next"
@@ -47,7 +48,7 @@ function Register({}) {
                     ...styles.login,
                     ...theme.typography.titleMedium,
                     color: theme.colors.primary
-                }} href={"/auth/register"}>Already have an account ?</Link>
+                }} href={"/(auth)/register"}>Already have an account ?</Link>
             </View>
         </SafeAreaView>
     );

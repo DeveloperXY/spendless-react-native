@@ -27,6 +27,7 @@ export default function SpendlessButton(
         loading = false,
         iconName,
         style,
+        onPress,
         ...props
     }: SpendlessButtonProps
 ) {
@@ -43,9 +44,7 @@ export default function SpendlessButton(
     return (
         <Pressable
             {...props}
-            onPress={disabled || loading ? undefined : () => {
-                console.log("pressed")
-            }}
+            onPress={disabled || loading ? undefined : onPress}
             disabled={disabled}
             style={({pressed}) => [
                 styles.root,

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, Pressable, StyleProp, StyleSheet, Text, View, ViewStyle} from "react-native";
+import {Pressable, StyleProp, StyleSheet, Text, View, ViewStyle} from "react-native";
 import {SafeAreaView, useSafeAreaInsets} from "react-native-safe-area-context";
 import {useTheme} from "@/src/hooks/useTheme";
 import PinCombination from "@/src/screens/Pin/components/PinCombination";
@@ -8,24 +8,20 @@ import {Ionicons} from "@expo/vector-icons";
 import {LogoutButton} from "@/src/screens/Pin/components/LogoutButton";
 import ScreenHeader from "@/src/components/ScreenHeader";
 
-type HeaderProps = {
-    title: string;
-    subTitle: string;
-    style?: StyleProp<ViewStyle>
-};
-
 type IoniconName = React.ComponentProps<typeof Ionicons>["name"];
 
 type KeyboardBtnProps =
     (| { type: "text"; value: string }
         | { type: "icon"; value: IoniconName }) & {
-    enabled?: boolean,
-    style?: StyleProp<ViewStyle>
+    enabled?: boolean;
+    onKeyPress: () => void;
+    style?: StyleProp<ViewStyle>;
 };
 
 type KeyboardProps = {
     enabled?: boolean;
     hideFingerprint?: boolean;
+    onKeyPress: (value: KeyPressValue) => void;
     style?: StyleProp<ViewStyle>
 };
 
@@ -34,16 +30,29 @@ type ErrorFooterProps = {
     style?: StyleProp<ViewStyle>
 };
 
+export type KeyPressValue = "fingerprint" | "delete" | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
+
 type PinScreenProps = {
     title: string;
     subTitle: string;
     pin: string;
+    onKeyPress: (value: KeyPressValue) => void;
     showBackBtn?: boolean;
     showLogOutBtn?: boolean;
     error?: string;
+    pinLength?: number;
 };
 
-function PinScreen({showBackBtn = false, showLogOutBtn = false, error, title, subTitle, pin}: PinScreenProps) {
+function PinScreen({
+                       showBackBtn = false,
+                       showLogOutBtn = false,
+                       pinLength = 5,
+                       error,
+                       title,
+                       subTitle,
+                       pin,
+                       onKeyPress
+                   }: PinScreenProps) {
     const {theme} = useTheme();
     const insets = useSafeAreaInsets();
 
@@ -56,8 +65,8 @@ function PinScreen({showBackBtn = false, showLogOutBtn = false, error, title, su
                         <LogoutButton style={[styles.logoutBtn, {backgroundColor: `${theme.colors.error}12`}]}
                                       onClick={() => console.log("logout")}/>}
                     <ScreenHeader title={title} subTitle={subTitle} style={{marginTop: 24}}/>
-                    <PinCombination pin={pin} containerStyle={{marginTop: 48}}/>
-                    <PinScreen.Keyboard/>
+                    <PinCombination pin={pin} containerStyle={{marginTop: 48}} count={pinLength}/>
+                    <PinScreen.Keyboard onKeyPress={onKeyPress}/>
                 </View>
             </SafeAreaView>
 
@@ -66,7 +75,12 @@ function PinScreen({showBackBtn = false, showLogOutBtn = false, error, title, su
     );
 }
 
-PinScreen.Keyboard = function Header({style, enabled = true, hideFingerprint = true}: KeyboardProps) {
+PinScreen.Keyboard = function Header({
+                                         onKeyPress,
+                                         style,
+                                         enabled = true,
+                                         hideFingerprint = true
+                                     }: KeyboardProps) {
     const rows = [
         ["1", "2", "3"],
         ["4", "5", "6"],
@@ -78,23 +92,29 @@ PinScreen.Keyboard = function Header({style, enabled = true, hideFingerprint = t
             {rows.map((row, rowIndex) => (
                 <View key={rowIndex} style={styles.keyboardRow}>
                     {row.map((key) => (
-                        <KeyboardButton key={key} type="text" value={key} enabled={enabled}/>
+                        <KeyboardButton key={key} type="text" value={key} enabled={enabled}
+                                        onKeyPress={() => onKeyPress(key as KeyPressValue)}/>
                     ))}
                 </View>
             ))}
             <View style={styles.keyboardRow}>
-                <KeyboardButton type="icon" value="finger-print" enabled={enabled}
-                                style={{opacity: hideFingerprint ? 0 : 1}}/>
-                <KeyboardButton type="text" value="0" enabled={enabled}/>
-                <KeyboardButton type="icon" value="backspace" enabled={enabled}/>
+                <KeyboardButton
+                    type="icon"
+                    value="finger-print"
+                    enabled={enabled}
+                    style={{opacity: hideFingerprint ? 0 : 1}}
+                    onKeyPress={() => onKeyPress("fingerprint")}/>
+                <KeyboardButton type="text" value="0" enabled={enabled} onKeyPress={() => onKeyPress("0")}/>
+                <KeyboardButton type="icon" value="backspace" enabled={enabled}
+                                onKeyPress={() => onKeyPress("delete")}/>
             </View>
         </View>
     );
 };
 
-function KeyboardButton({style, type, value, enabled}: KeyboardBtnProps) {
+function KeyboardButton({style, type, value, enabled, onKeyPress}: KeyboardBtnProps) {
     const {theme} = useTheme();
-    return <Pressable disabled={!enabled} style={({pressed}) => [
+    return <Pressable disabled={!enabled} onPress={onKeyPress} style={({pressed}) => [
         {
             opacity: enabled ? 1 : 0.4,
         },
